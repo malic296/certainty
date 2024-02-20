@@ -1,0 +1,54 @@
+﻿@page
+@model certainty.Pages.CurrenciesModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Your Account Currencies</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add any additional CSS files or styles here -->
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1>Your account currencies</h1>
+        <h4>Select a currency you want to use</h4>
+        <p class="text-start">If you want to use a different currency than CZK, write down the shortcut of the currency or its name, and it will be automatically changed for your whole account.</p>
+
+        <form method="post" class="mb-4">
+            <div class="form-group">
+                <input type="text" placeholder="New Currency" class="form-control" name="name" required maxlength="50" />
+            </div>
+            <button type="submit" class="btn btn-primary">Select</button>
+            <br />
+            @HttpContext.Session.GetString("currencyCheck")
+        </form>
+
+        <h4>List of all available currencies</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Shortcut</th>
+                        <th>Currency Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.currencies)
+                    {
+                        <tr>
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br /><br /><br />
+    </div>
+</body>
+</html>
+
+

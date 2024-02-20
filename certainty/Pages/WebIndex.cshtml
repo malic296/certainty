@@ -1,0 +1,262 @@
+﻿
+
+@page
+@model certainty.Pages.WebIndexModel
+
+<h2 class="text-center text-decoration-underline">Financial Summary</h2>
+
+<div class="container mt-5">
+    <div class="row text-center">
+
+        <div class="col-4 mb-4">
+            <div class="card border-success">
+                <div class="card-body text-white bg-success">
+                    <h4 class="card-title">Total Records</h4>
+                    <p class="card-text">@Model.recordsTotal</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mb-4">
+            <div class="card border-info">
+                <div class="card-body text-white bg-success">
+                    <h4 class="card-title">Records Last Year</h4>
+                    <p class="card-text">@Model.recordsLastYear</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mb-4">
+            <div class="card border-warning">
+                <div class="card-body text-white bg-success">
+                    <h4 class="card-title">Records This Month</h4>
+                    <p class="card-text">@Model.recordsCurrentMonth</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mb-4">
+            <div class="card border-danger">
+                <div class="card-body text-white bg-danger">
+                    <h4 class="card-title">Biggest Expense</h4>
+                    <p class="card-text">@Model.biggestExpense @Model.Currency</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mb-4">
+            <div class="card border-primary">
+                <div class="card-body text-white bg-info">
+                    <h4 class="card-title">Average Expense</h4>
+                    <p class="card-text">@Model.averageExpense @Model.Currency</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mb-4">
+            <div class="card border-danger">
+                <div class="card-body text-white bg-danger">
+                    <h4 class="card-title">Lowest Expense</h4>
+                    <p class="card-text">@Model.lowestExpense @Model.Currency</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+    </br>
+    </br>
+
+
+    <h2 class="text-center text-decoration-underline">Charts</h2>
+
+    <div class="my-4 row">
+        <h2 class="col-12">Last year</h2>
+        <div class="col-12 text-center">
+            <canvas id="barChart" width="400" height="200"></canvas>
+            </br>
+            </br>
+            <button class="btn btn-primary mt-2" onclick="downloadChart('barChart', 'barChart.png')">Download Last Year Graph</button>
+            </br>
+            </br>
+        </div>
+    </div>
+
+    <div class="my-4 row">
+        <h2 class="col-12">Current month</h2>
+        <div class="col-12 text-center">
+            <canvas id="lineChart" width="400" height="200"></canvas>
+            </br>
+            </br>
+            <button class="btn btn-primary mt-2" onclick="downloadChart('lineChart', 'lineChart.png')">Download Current Month Graph</button>
+            </br>
+            </br>
+        </div>
+    </div>
+
+    <div class="my-4 row">
+        <h2 class="col-12">Category expenses</h2>
+        <div class="col-12 text-center">
+            <canvas id="doughnutChart" width="400" height="200"></canvas>
+            </br>
+            </br>
+            <button class="btn btn-primary mt-2" onclick="downloadChart('doughnutChart', 'doughnutChart.png')">Download Category Graph</button>
+            </br>
+            </br>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function downloadChart(chartId, fileName) {
+        var chartCanvas = document.getElementById(chartId);
+        var base64Image = chartCanvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+
+        var link = document.createElement('a');
+        link.href = base64Image;
+        link.download = fileName;
+        link.click();
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+
+<script>
+    //last year
+    var labels = [];
+    var data = [];
+    @using System.Globalization
+    @foreach (var record in Model.yearRecords)
+    {
+        // Add month names to labels
+        @:labels.push('@CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(record.month)');
+
+        // Add values to data
+        @:data.push(@(record.value.ToString("0.00", CultureInfo.InvariantCulture)));
+    }
+
+    var barChartCanvas = document.getElementById('barChart');
+    var barChartData = {
+        labels: labels,
+        datasets: [{
+            label: 'Expenses - Year @Model.yearAgo - @Model.currentYear',
+            data: data,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+    var barChartOptions = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Expences [@Model.Currency]'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Months'
+                }
+            }
+        }
+    };
+    var barChart = new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+    // Last month
+    var lineChartCanvas = document.getElementById('lineChart');
+    var lineChartData = {
+    labels: [
+    @foreach (var i in Model.daysInMonth)
+    {
+        @: '@i',
+    }
+    ],
+    datasets: [{
+        label: 'Last month daily expences',
+        data: [
+    @foreach(var i in Model.valuesMonth)
+    {
+        @: '@(i.ToString("0.00", CultureInfo.InvariantCulture))',
+    }
+    ],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        fill: false
+      }]
+    };
+    var lineChartOptions = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Expences [@Model.Currency]'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Current Month - @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(@Model.today.Month)'
+                }
+            }
+        }
+    };
+    var lineChart = new Chart(lineChartCanvas, {
+      type: 'line',
+      data: lineChartData,
+      options: lineChartOptions
+    });
+
+    // categories
+    var doughnutChartCanvas = document.getElementById('doughnutChart');
+    var doughnutChartData = {
+        labels: [
+    @foreach (var i in @Model.categoryValue)
+    {
+        @: '@Html.Raw(i.category)',
+    }
+        ],
+        datasets: [{
+            data: [
+    @foreach (var i in @Model.categoryValue)
+    {
+        @: '@(i.value.ToString("0.00", CultureInfo.InvariantCulture))' ,
+    }
+        ],
+            backgroundColor: [
+    @foreach (var color in Model.colors)
+    {
+        @: '@color',
+    }
+        ],
+            borderColor: [
+    @foreach (var color in Model.colors)
+    {
+        @: '@color',
+    }
+            ],
+            borderWidth: 1
+        }]
+    };
+    var doughnutChartOptions = {};
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+        type: 'doughnut',
+        data: doughnutChartData,
+        options: doughnutChartOptions
+    });
+</script>
+
+@{
+}

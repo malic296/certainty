@@ -1,0 +1,35 @@
+﻿@page
+@model certainty.Pages.editRecordModel
+
+<h1>Edit record</h1>
+
+<form method="post">
+    <label for="category">Category: </label>
+    <br />
+    <input class="form-control" value="@Model.record.category" list="options" id="category" name="category" placeholder="Type in new category or select existing one" maxlength="80" required>
+    <datalist id="options">
+        @foreach (var i in Model.categories)
+        {
+            <option value="@i"></option>
+        }
+
+
+    </datalist>
+    <br />
+    <label for="value">Outcome: </label>
+    <input type="text" class="form-control" value="@Model.record.value" name="value" placeholder="Type in how much did you spend [@Model.currency]" maxlength="15" required />
+    <br />
+
+    <label for="recordDate">Date: </label>
+    <input class="form-control" name="recordDate" type="date" value="@Model.record.recordDate.Date.ToString("yyyy-MM-dd")" required />
+
+    <br />
+
+
+    <input class="btn btn-primary" type="submit" value="Update" />
+    <br />
+    
+</form>
+
+@{
+}

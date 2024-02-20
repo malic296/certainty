@@ -1,0 +1,33 @@
+﻿@page
+@model certainty.Pages.RegisterModel
+
+<div class="container mt-5">
+    <h1 class="display-4 text-center">Register</h1>
+
+    <form method="post" class="mx-auto" style="max-width: 400px; margin-top: 20px;">
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input id="username" type="text" class="form-control" name="username" maxlength="50" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">E-mail:</label>
+            <input id="email" type="text" class="form-control" name="email" maxlength="50" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input id="password" type="password" class="form-control" name="password" maxlength="50" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+
+    </form>
+
+    <h2 class="text-center mt-3">@Model.message</h2>
+
+    <p class="text-center" style="margin: 20px;">
+        <a asp-page="/Login">Login</a>
+    </p>
+</div>
