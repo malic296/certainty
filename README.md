@@ -1,6 +1,8 @@
 Projekt u kterého jsem se naučil práci s C# Razor Pages (MVVM), v průběhu vývoje jsem se zlepšoval a spousta kodu se dala napsat čistěji (jako například SqlClient dependency injection).
 Přesto si myslím, že je projekt poměrně rozsáhlý a dal mi mnoho.
 
+Použité technologie: C#, Razor pages, HTML, CSS, JS, Chart,js, ADO.NET, Bootstrap, JSON
+
 Pro stažení a funkčnost je potřeba vytvořit na localhostu databázi certainty s dvěmi tabulky recordTable a userTable podle předlohy:
 
 CREATE DATABASE certainty;
