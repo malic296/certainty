@@ -705,7 +705,7 @@ namespace certainty.Injections
         //ověření loginu uživatele
         public bool validateLogin(string username, string password)
         {
-            bool validation = true;
+            bool validation = false;
             string salt = getSalt(username);
             password = HashPassword(password, salt);
             string databasePassword = "";
