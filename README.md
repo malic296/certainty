@@ -18,7 +18,7 @@ CREATE TABLE userTable(
 );
 
 CREATE TABLE recordTable(
-    recordID INT PRIMARY KEY,
+    recordID INT IDENTITY(1,1) PRIMARY KEY,
     category VARCHAR(100),
     userID VARCHAR(100),
     value FLOAT,
